@@ -111,12 +111,15 @@ export default {
     saveResults () {
       // В случае корректного ответа
       // сохраняем результаты в хранилище
-      if (this.isCorrectAnswer() && this.answeredLetters.length) {
+      if (
+        this.isCorrectAnswer() &&
+        this.answeredLetters.length &&
+        this.isStarted
+      ) {
         let userAnswer = String()
         this.answeredLetters.map(i => {
           userAnswer += i.letter
         })
-        this.shuffledWord = null
         this.$store.commit(ADD_RESULT, {
           number: this.gamesCounter,
           time: this.timer.getSeconds(),
