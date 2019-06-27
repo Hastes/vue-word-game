@@ -2,7 +2,7 @@
   mixin letter(letter)
     template(v-if="!gameOver")
       div.letter(
-        @click="addLetter(letter)" v-bind:class="[ letter.position == letter.choose ?  'active' : '' ]"
+        @click="addLetter(letter)" v-bind:class="[ letter.position == letter.choose ?  'correct' : '' ]"
       ) {{ letter.letter }}
     template(v-else)
       div.letter_nonclickable {{ letter.letter }}
@@ -19,7 +19,7 @@
 
   mixin results(status)
     div.results
-      h3.title= status
+      p.title= status
       p
         button(@click="restart") Конечно
       p
@@ -29,8 +29,9 @@
     div(v-if="!isStarted")
       button(@click="restart") Новая игра
     template(v-if="isOpenResults")
-      h2 Результаты
-        table.results
+      div.results
+        h1 Результаты
+        table
           tr
             th №
             th Слово
@@ -184,3 +185,57 @@ export default {
 }
 </script>
 
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped lang="sass">
+body
+  padding: 0
+  margin: 0
+div.game-wrapper
+  height: 100vh
+  display: flex
+  justify-content: center
+  text-align: center
+  flex-direction: column
+  ul
+    list-style-type: none
+    padding: 0 0 20px 0
+    li
+      display: inline-block
+      margin: 10px 10px
+      .letter
+        box-shadow: 0px 0px 8px 0px rgba(0,0,0,0.5)
+        padding: 10px
+        cursor: pointer
+        transition: 0.1s
+      .letter:hover
+        transform: scale(1.1)
+      .letter.correct
+        box-shadow: 0px 0px 13px 0px #46729e
+  h1
+    margin: 5px
+  h1.status
+    font-size: 10vw
+  button
+    cursor: pointer
+    background-color: #2c3e50
+    border: 0
+    color: white
+    padding: 10px
+    border-radius: 3px
+    font-weight: bold
+    transition: 0.2s transform ease-in-out
+  button:hover
+        transform: scale(1.05)
+  div.results
+    padding: 20px 10vw
+    display: flex
+    justify-content: center
+    flex-direction: column
+    table
+      th, td
+        text-align: left
+        padding-left: 5px
+        background-color: #2c3e50
+        color: white
+
+</style>
