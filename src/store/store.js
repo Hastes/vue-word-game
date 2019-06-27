@@ -13,6 +13,8 @@ const store = new Vuex.Store({
   },
   getters: {
     getResults (state) {
+      // Содержит в себе объекты вида
+      // { time: Number, userAnswer: String, answer: String, number: Number }
       return state.results
     },
     isLoading (state) {

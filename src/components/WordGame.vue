@@ -29,17 +29,7 @@
     div(v-if="!isStarted")
       button(@click="restart") Новая игра
     template(v-if="isOpenResults")
-      div.results
-        h1 Результаты
-        table
-          tr
-            th №
-            th Слово
-            th Время
-          tr(v-for='(result, i) in results')
-            td {{ i + 1 }}
-            td {{ result.userAnswer }}
-            td {{ result.time }}
+      Results
     template(v-else)
       div.output
       +letters
@@ -58,6 +48,7 @@ import { GET_RANDOM_WORD } from '../store/actions.type'
 import { ADD_RESULT } from '../store/mutations.type'
 import Generator from '../tools/Generator.js'
 import Timer from '../tools/Timer'
+import Results from './Results'
 
 const generator = new Generator(2, 1368)
 
@@ -72,6 +63,7 @@ const shuffleString = word => {
 
 export default {
   name: 'WordGame',
+  components: { Results },
   data () {
     return {
       shuffledWord: Array.apply(),
@@ -79,7 +71,8 @@ export default {
       totalSeconds: 0,
       timer: new Timer(),
       isOpenResults: false,
-      isStarted: false
+      isStarted: false,
+      gamesCounter: 1
     }
   },
   methods: {
@@ -110,6 +103,8 @@ export default {
         })
     },
     isCorrectAnswer () {
+      // Находит несоответствие,
+      // если таковое не найдено - возвращает true
       const notequal = this.answeredLetters.find(i => i.choose !== i.position)
       if (notequal === undefined) return true
     },
@@ -121,11 +116,14 @@ export default {
         this.answeredLetters.map(i => {
           userAnswer += i.letter
         })
+        this.shuffledWord = null
         this.$store.commit(ADD_RESULT, {
+          number: this.gamesCounter,
           time: this.timer.getSeconds(),
           userAnswer: userAnswer,
           answer: this.answer
         })
+        ++this.gamesCounter
       }
     },
     restart () {
@@ -133,8 +131,7 @@ export default {
       this.updateWord().then(() => {
         this.timer.start()
         this.isStarted = true
-      }
-      )
+      })
       this.isOpenResults = false
     },
     stop () {
@@ -148,8 +145,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      isLoading: 'isLoading',
-      results: 'getResults'
+      isLoading: 'isLoading'
     }),
     unansweredLetters (state) {
       return state.shuffledWord.filter(letter => letter.choose === undefined)
@@ -187,9 +183,6 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="sass">
-body
-  padding: 0
-  margin: 0
 div.game-wrapper
   height: 100vh
   display: flex
@@ -207,6 +200,7 @@ div.game-wrapper
         padding: 10px
         cursor: pointer
         transition: 0.1s
+        border-radius: 3px
       .letter:hover
         transform: scale(1.1)
       .letter.correct
@@ -225,17 +219,5 @@ div.game-wrapper
     font-weight: bold
     transition: 0.2s transform ease-in-out
   button:hover
-        transform: scale(1.05)
-  div.results
-    padding: 20px 10vw
-    display: flex
-    justify-content: center
-    flex-direction: column
-    table
-      th, td
-        text-align: left
-        padding-left: 5px
-        background-color: #2c3e50
-        color: white
-
+    transform: scale(1.05)
 </style>
