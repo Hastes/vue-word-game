@@ -1,0 +1,2 @@
+export const ENDPOINT = 'https://apidir.pfdo.ru/v1/directory-program-activities/'
+export default ENDPOINT
