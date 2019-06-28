@@ -2,7 +2,7 @@
   mixin letter(letter)
     template(v-if="!gameOver")
       div.letter(
-        @click="addLetter(letter)" v-bind:class="[ letter.position == letter.choose ?  'correct' : '' ]"
+        @click="addLetter(letter)" v-bind:class="[ letter.position.includes(letter.choose) ?  'correct' : '' ]"
       ) {{ letter.letter }}
     template(v-else)
       div.letter_nonclickable {{ letter.letter }}
@@ -53,10 +53,18 @@ import Results from './Results'
 const generator = new Generator(2, 1368)
 
 const shuffleString = word => {
+  // Создает массив объектов вида
+  // { letter: String, position: Array, choose: Number}
   const list = Array.apply()
   const letters = word.split('')
   letters.map(
-    (i, index) => list.push({ letter: i, position: index, choose: undefined })
+    (i, index, items) => {
+      const indexes = []
+      items.map((j, jIndex) => {
+        if (j === i) indexes.push(jIndex)
+      })
+      list.push({ letter: i, position: indexes, choose: undefined })
+    }
   )
   return list.sort((a, b) => Math.random() - 0.5)
 }
@@ -105,8 +113,8 @@ export default {
     isCorrectAnswer () {
       // Находит несоответствие,
       // если таковое не найдено - возвращает true
-      const notequal = this.answeredLetters.find(i => i.choose !== i.position)
-      if (notequal === undefined) return true
+      const notIncluded = this.answeredLetters.find(i => !i.position.includes(i.choose))
+      if (notIncluded === undefined) return true
     },
     saveResults () {
       // В случае корректного ответа

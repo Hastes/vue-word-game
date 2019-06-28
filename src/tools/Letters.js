@@ -1,17 +1,7 @@
 export class Letters extends Array {
-  constructor (...items) {
-    super(...items)
-  }
+  static get [Symbol.species] () { return Letters }
   isCorrect () {
-  }
-  map (callback) {
-    return new Letters(super.map(callback))
-  }
-  filter (callback) {
-    return new Letters(super.filter(callback))
-  }
-  sort (callback) {
-    return new Letters(super.sort(callback))
+    return true
   }
 }
 
