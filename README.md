@@ -1,29 +1,4 @@
-# vue-word-game
+# vue-word-game 
 
-## Project setup
-```
-npm install
-```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Run your tests
-```
-npm run test
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+Мини-игра по типу "Эрудит"  [Перейти к игре](https://hastes.github.io/vue-word-game-prod/)
+### Стек `vue, vuex, pug(jade), sass, axios`
